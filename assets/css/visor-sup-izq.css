@@ -1,0 +1,117 @@
+.negro {
+    color: black;
+}
+
+.rojo {
+    background-color: red!important;
+}
+
+.verde {
+    background-color: green!important;
+}
+
+.bottom {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.visor-left {
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    width: 40px;
+    height: 68px;
+    margin: auto;
+    border-radius: 50%;
+}
+
+.interior {
+    margin: auto;
+}
+
+.circle {
+    background-color: blue;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+}
+
+.circle.d1 {
+    margin-bottom: 4px;
+}
+
+.fondo {
+    background-color: blue;
+    display: flex;
+}
+
+
+/* edicion pelao*/
+
+#boton_mostrar {
+    position: fixed;
+    /* Fija el botón en la pantalla */
+    top: 10px;
+    /* Lo coloca a 10px desde la parte superior */
+    left: 10%;
+    /* Lo centra horizontalmente */
+    transform: translateX(-50%);
+    /* Ajuste para centrarlo perfectamente */
+    padding: 10px 20px;
+    background-color: gray;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10;
+    /* Asegura que el botón esté encima de otros elementos */
+}
+
+#boton_mostrar.on {
+    background-color: green;
+}
+
+#boton_mostrar.off {
+    background-color: red;
+}
+
+
+/* Animación para el visor-left */
+
+.visor-left {
+    display: flex;
+    background-color: black;
+    width: 40px;
+    height: 68px;
+    margin: auto;
+    border-radius: 50%;
+    opacity: 1;
+    /* Inicialmente visible */
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    /* Agrega transición para opacidad y desplazamiento */
+}
+
+
+/* Cuando el visor-left está oculto */
+
+.visor-left.oculto {
+    opacity: 0;
+    /* Lo hace invisible */
+    transform: translateX(-100%);
+    /* Desplaza el visor hacia la izquierda fuera de la pantalla */
+}
+
+.oculto {
+    opacity: 0;
+    transform: translateX(20px);
+    /* Se mueve hacia la derecha */
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.visible {
+    opacity: 1;
+    transform: translateX(0);
+    /* Vuelve a su posición original */
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}

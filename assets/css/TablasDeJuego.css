@@ -1,0 +1,96 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+    background-color: #f4f4f9;
+    /* Fondo más suave */
+}
+
+button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    /* Botón verde */
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #45a049;
+    /* Efecto hover para los botones */
+}
+
+table {
+    margin: 20px auto;
+    border-collapse: collapse;
+    width: 80%;
+    /* Ajusta el tamaño de la tabla */
+}
+
+th,
+td {
+    padding: 10px;
+    border: 1px solid #dddddd;
+    text-align: center;
+}
+
+th {
+    background-color: #4CAF50;
+    color: rgb(255, 255, 255);
+}
+
+td {
+    width: 30px;
+    height: 30px;
+    background-color: #f2f2f2;
+    /* Fondo más claro */
+    font-size: 14px;
+    color: #333;
+    /* Color de texto más oscuro */
+}
+
+td.Color-NombreJugador {
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+}
+
+td.verde {
+    background-color: green !important;
+}
+
+td.rojo {
+    background-color: red !important;
+}
+
+.active-shot {
+    outline: 3px solid yellow;
+    /* Borde amarillo para destacar */
+    background-color: rgba(255, 255, 0, 0.3);
+    /* Color de fondo tenue */
+}
+
+#rankingTable th,
+#rankingTable td {
+    text-align: left;
+}
+
+#rankingTable th {
+    background-color: #333;
+    color: white;
+}
+
+#resetButton {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#resetButton:hover {
+    background-color: #e53935;
+}
