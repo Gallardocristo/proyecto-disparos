@@ -308,6 +308,7 @@ function resetGame() {
     }
 
     ReiniciarColor();
+    ReiniciarColor_VisorSup();
 }
 
 function resetShot() {
@@ -353,6 +354,7 @@ document.addEventListener("keydown", function(event) {
 
 
 // Variables para el estado actual
+let CirculoActivo_VisorSup = "D1";
 let CirculoActivo = "d1";
 
 // Función para actualizar el estado en localStorage
@@ -368,6 +370,13 @@ function ReiniciarColor() {
     localStorage.removeItem("d4");
     CirculoActivo = "d1"; // Volver a d1 al reiniciar
     localStorage.setItem("CirculoActivo", "d1");
+}
+
+function ReiniciarColor_VisorSup() {
+    localStorage.removeItem("D1");
+    localStorage.removeItem("D2");
+    CirculoActivo_VisorSup = "D1"; // Volver a d1 al reiniciar
+    localStorage.setItem("CirculoActivo_VisorSup", "D1");
 }
 
 //Reinicio individual
@@ -391,30 +400,37 @@ function Mostrar_Visor_flotante() {
 
 // Escuchar las teclas
 document.addEventListener("keydown", (event) => {
-    if (event.key === "+" && InicioElJuego === true) {
-        CambiarColor(CirculoActivo, "verde");
-    } else if (event.key === "-" && InicioElJuego === true) {
-        CambiarColor(CirculoActivo, "rojo");
-    } else if (event.key === "Backspace" && InicioElJuego === true) {
-        ReinicioIndividual(CirculoActivo);
-    } else if (CirculoActivo === "d5" && event.key === "Enter") {
-        ReiniciarColor();
-    } else if (event.key === "Enter" && CirculoActivo === "d1" && InicioElJuego === true) {
-        CirculoActivo = "d2";
-        localStorage.setItem("CirculoActivo", "d2");
-    } else if (event.key === "Enter" && CirculoActivo === "d2") {
-        CirculoActivo = "d3";
-        localStorage.setItem("CirculoActivo", "d3");
-    } else if (event.key === "Enter" && CirculoActivo === "d3") {
-        CirculoActivo = "d4";
-        localStorage.setItem("CirculoActivo", "d4");
-    } else if (event.key === "0") {
-        ReiniciarColor();
-    } else if (CirculoActivo === "d4" && event.key === "Enter") {
-        ReiniciarColor();
+    if (InicioElJuego === true) {
+        if (event.key === "+") {
+            CambiarColor(CirculoActivo, "verde");
+            CambiarColor(CirculoActivo_VisorSup, "verde");
+        } else if (event.key === "-") {
+            CambiarColor(CirculoActivo, "rojo");
+            CambiarColor(CirculoActivo_VisorSup, "rojo");
+        } else if (event.key === "Backspace") {
+            ReinicioIndividual(CirculoActivo);
+            ReinicioIndividual(CirculoActivo_VisorSup);
+        } else if (event.key === "0") {
+            ReiniciarColor();
+        } else if (CirculoActivo === "d4" && event.key === "Enter") {
+            ReiniciarColor();
+            ReiniciarColor_VisorSup();
+        } else if (event.key === "Enter" && CirculoActivo === "d1") {
+            CirculoActivo = "d2";
+            CirculoActivo_VisorSup = "D2";
+            localStorage.setItem("CirculoActivo", "d2");
+            localStorage.setItem("CirculoActivo_VisorSup", "D2");
+        } else if (CirculoActivo_VisorSup === "D2" && event.key === "Enter") {
+            ReiniciarColor_VisorSup();
+            CirculoActivo = "d3";
+            localStorage.setItem("CirculoActivo", "d3");
+        } else if (event.key === "Enter" && CirculoActivo === "d3") {
+            CirculoActivo = "d4";
+            CirculoActivo_VisorSup = "D2";
+            localStorage.setItem("CirculoActivo", "d4");
+        }
     }
 });
-
 // Botón de On/Off visor sup iq
 const toggleButton = document.getElementById("Boton_On/Off");
 toggleButton.addEventListener("click", Mostrar_Visor_sup);

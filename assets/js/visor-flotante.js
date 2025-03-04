@@ -27,7 +27,7 @@ function ActualizarColor() {
 
 // Función para actualizar la visibilidad del visor con animación
 function ActualizarVisibilidad() {
-    const EsVisible = localStorage.getItem("Visibilidad_visor_sup") !== "oculto";
+    const EsVisible = localStorage.getItem("Visibilidad_visor_flotante") !== "oculto";
 
     if (EsVisible) {
         VisorFlotante.classList.remove("oculto");

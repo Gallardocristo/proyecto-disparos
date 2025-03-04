@@ -1,22 +1,22 @@
 const visorLeft = document.querySelector(".visor-left");
-const d1 = document.getElementById("d1");
-const d2 = document.getElementById("d2");
+const D1 = document.getElementById("D1");
+const D2 = document.getElementById("D2");
 
 // Función para actualizar el color de un círculo
-function AplicarColor(CirculoActual, color) {
-    CirculoActual.classList.remove("rojo", "verde");
+function AplicarColor(CirculoActual_VisorSup, color) {
+    CirculoActual_VisorSup.classList.remove("rojo", "verde");
     if (color) {
-        CirculoActual.classList.add(color);
+        CirculoActual_VisorSup.classList.add(color);
     }
 }
 
 // Función para actualizar los colores según el estado en localStorage
 function ActualizarColor() {
-    const d1Color = localStorage.getItem("d1");
-    const d2Color = localStorage.getItem("d2");
+    const D1Color = localStorage.getItem("D1");
+    const D2Color = localStorage.getItem("D2");
 
-    AplicarColor(d1, d1Color);
-    AplicarColor(d2, d2Color);
+    AplicarColor(D1, D1Color);
+    AplicarColor(D2, D2Color);
 }
 
 // Función para actualizar la visibilidad del visor con animación
@@ -38,7 +38,7 @@ ActualizarVisibilidad();
 
 // Escuchar cambios en localStorage
 window.addEventListener("storage", (event) => {
-    if (event.key === "d1" || event.key === "d2") {
+    if (event.key === "D1" || event.key === "D2") {
         ActualizarColor();
     } else if (event.key === "Visibilidad_visor_sup") {
         ActualizarVisibilidad();
