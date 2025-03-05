@@ -50,3 +50,21 @@ window.addEventListener("storage", (event) => {
         ActualizarVisibilidad();
     }
 });
+
+const CajaNombre = document.getElementById("Caja_Nombre");
+
+// Función para actualizar el nombre del jugador
+function ActualizarNombreJugador() {
+    const nombreJugador = localStorage.getItem("Jugador_Activo");
+    CajaNombre.textContent = nombreJugador;
+}
+
+// Al cargar la página, mostrar el nombre inicial
+ActualizarNombreJugador();
+
+// Escuchar cambios en localStorage
+window.addEventListener("storage", (event) => {
+    if (event.key === "Jugador_Activo") {
+        ActualizarNombreJugador();
+    }
+});

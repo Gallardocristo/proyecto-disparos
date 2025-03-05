@@ -57,6 +57,8 @@ function IniciarJuego() {
         Jugadores.push({ name: nameInput.value, score: 0, currentShot: 0 });
     }
 
+    localStorage.setItem("Jugador_Activo", Jugadores[IndexJugadorActual].name);
+
     // Activamos las tablas de puntajes y disparos
     renderTables();
     createControlButtons();
@@ -128,6 +130,8 @@ function updatePlayerNameInTables(index, newName) {
 
     let shotNameCell = document.getElementById(`shot-name-${index}`);
     if (shotNameCell) shotNameCell.textContent = cleanName;
+
+    localStorage.setItem("Jugador_Activo", Jugadores[IndexJugadorActual].name);
 }
 
 // Función para crear los botones
@@ -257,6 +261,8 @@ function moveToNextPlayer() {
     // Asegurar que el nuevo jugador empieza en la primera casilla disponible
     let newCell = document.getElementById(`shot-${IndexJugadorActual}-${newPlayer.currentShot}`);
     if (newCell) newCell.classList.add("active-shot");
+
+    localStorage.setItem("Jugador_Activo", Jugadores[IndexJugadorActual].name);
 }
 
 // Función para mostrar el ranking final
@@ -290,6 +296,8 @@ function resetGame() {
     IndexJugadorActual = 0;
     DisparosEnRonda = 0;
     ConteoDisparosJugador = 0;
+
+    localStorage.setItem("Jugador_Activo", "Nombre");
 
     // Limpiar los inputs de nombres de jugadores
     document.getElementById("playerNamesContainer").innerHTML = "";
