@@ -68,3 +68,21 @@ window.addEventListener("storage", (event) => {
         ActualizarNombreJugador();
     }
 });
+
+const CajaPuntos = document.getElementById("Caja_Puntos");
+
+// Función para actualizar el Puntaje del jugador
+function ActualizarPuntajeJugador() {
+    const puntosJugador = localStorage.getItem("Puntos_Jugador_Activo");
+    CajaPuntos.textContent = puntosJugador;
+}
+
+// Al cargar la página, mostrar el nombre inicial
+ActualizarPuntajeJugador();
+
+// Escuchar cambios en localStorage
+window.addEventListener("storage", (event) => {
+    if (event.key === "Puntos_Jugador_Activo") {
+        ActualizarPuntajeJugador();
+    }
+});

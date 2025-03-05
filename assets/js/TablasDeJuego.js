@@ -205,6 +205,8 @@ function updateScore() {
     // Asignamos el puntaje real
     player.score = hits;
     document.getElementById(`score-${IndexJugadorActual}`).textContent = player.score;
+
+    localStorage.setItem("Puntos_Jugador_Activo", Jugadores[IndexJugadorActual].score);
 }
 
 
@@ -263,6 +265,7 @@ function moveToNextPlayer() {
     if (newCell) newCell.classList.add("active-shot");
 
     localStorage.setItem("Jugador_Activo", Jugadores[IndexJugadorActual].name);
+    localStorage.setItem("Puntos_Jugador_Activo", Jugadores[IndexJugadorActual].score);
 }
 
 // Función para mostrar el ranking final
@@ -298,6 +301,7 @@ function resetGame() {
     ConteoDisparosJugador = 0;
 
     localStorage.setItem("Jugador_Activo", "Nombre");
+    localStorage.setItem("Puntos_Jugador_Activo", "00")
 
     // Limpiar los inputs de nombres de jugadores
     document.getElementById("playerNamesContainer").innerHTML = "";
