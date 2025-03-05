@@ -1,5 +1,5 @@
 // Definimos Variables
-let TotalDisparos = 20;
+let TotalDisparos = 20; //valor por defecto
 let Jugadores = []; // Lista de jugadores
 let IndexJugadorActual = 0; // Índice del jugador actual
 let DisparosEnRonda = 0; // Contador de disparos por ronda
@@ -91,6 +91,18 @@ function cargarEstadoGuardado() {
 
 // Función para iniciar el juego
 function IniciarJuego() {
+
+    // Primero validamos el número de disparos
+    let numeroDisparos = parseInt(document.getElementById("NumeroDisparos").value);
+
+    // Validamos que sea un número válido entre 1 y 50
+    if (isNaN(numeroDisparos) || numeroDisparos < 1 || numeroDisparos > 50) {
+        alert("Por favor, ingresa un número válido de disparos entre 1 y 50");
+        return;
+    }
+
+    TotalDisparos = numeroDisparos;
+
     InicioElJuego = true
 
     // Obtenemos el número de jugadores
