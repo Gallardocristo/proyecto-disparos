@@ -6,6 +6,89 @@ let DisparosEnRonda = 0; // Contador de disparos por ronda
 let ConteoDisparosJugador = 0; // Contador disparos del Jugador
 let InicioElJuego = false
 
+// Función para guardar el estado del juego
+function guardarEstadoJuego() {
+    // Guardar datos permanentes
+    localStorage.setItem("jugadores", JSON.stringify(Jugadores));
+    localStorage.setItem("puntuaciones", JSON.stringify(
+        Jugadores.map(jugador => ({ nombre: jugador.name, score: jugador.score }))
+    ));
+
+    // Guardar estado de disparos para cada jugador
+    const disparosEstado = {};
+    Jugadores.forEach((jugador, index) => {
+        disparosEstado[index] = {
+            disparosRealizados: jugador.currentShot,
+            disparosEnRonda: ConteoDisparosJugador
+        };
+        disparosEstado[index].disparos = [];
+        for (let i = 0; i < TotalDisparos; i++) {
+            const celda = document.getElementById(`shot-${index}-${i}`);
+            disparosEstado[index].disparos[i] = {
+                color: celda.style.backgroundColor,
+                resultado: celda.dataset.result
+            };
+        }
+    });
+    localStorage.setItem("estadoDisparos", JSON.stringify(disparosEstado));
+
+    // Guardar estado temporal
+    sessionStorage.setItem("estadoJuego", JSON.stringify({
+        indexJugadorActual: IndexJugadorActual,
+        disparosEnRonda: DisparosEnRonda,
+        inicioElJuego: InicioElJuego,
+        circuloActivo: CirculoActivo,
+        circuloActivoVisorSup: CirculoActivo_VisorSup
+    }));
+}
+
+// Función para cargar el estado guardado
+function cargarEstadoGuardado() {
+    // Cargar datos permanentes
+    const jugadoresGuardados = localStorage.getItem("jugadores");
+    if (jugadoresGuardados) {
+        Jugadores = JSON.parse(jugadoresGuardados);
+    }
+
+    // Cargar estado de disparos
+    const disparosGuardados = localStorage.getItem("estadoDisparos");
+    if (disparosGuardados) {
+        const disparosEstado = JSON.parse(disparosGuardados);
+        Object.keys(disparosEstado).forEach(index => {
+            const disparosJugador = disparosEstado[index];
+            if (disparosJugador.disparosRealizados) {
+                Jugadores[index].currentShot = disparosJugador.disparosRealizados;
+            }
+            if (disparosJugador.disparosEnRonda) {
+                ConteoDisparosJugador = disparosJugador.disparosEnRonda;
+            }
+
+            disparosJugador.disparos.forEach((disparo, posicion) => {
+                const celda = document.getElementById(`shot-${index}-${posicion}`);
+                if (celda) {
+                    celda.style.backgroundColor = disparo.color;
+                    if (disparo.resultado) {
+                        celda.dataset.result = disparo.resultado;
+                    }
+                }
+            });
+        });
+    }
+
+    // Cargar estado temporal
+    const estadoGuardado = sessionStorage.getItem("estadoJuego");
+    if (estadoGuardado) {
+        const estado = JSON.parse(estadoGuardado);
+        IndexJugadorActual = estado.indexJugadorActual;
+        DisparosEnRonda = estado.disparosEnRonda;
+        InicioElJuego = estado.inicioElJuego;
+        CirculoActivo = estado.circuloActivo;
+        CirculoActivo_VisorSup = estado.circuloActivoVisorSup;
+    }
+}
+
+
+
 // Función para iniciar el juego
 function IniciarJuego() {
     InicioElJuego = true
@@ -91,15 +174,15 @@ function renderTables() {
     Jugadores.forEach((player, index) => {
         let scoreRow = document.createElement("tr");
 
-        // Crear un input para el nombre del jugador, permitiendo cambiarlo
+        // Crear celda para el nombre del jugador
         let nameCell = document.createElement("td");
-        nameCell.textContent = player.name; // Aquí el nombre se muestra como texto, no como input
-        nameCell.id = `name-${index}`; // Asignamos un ID para actualizarlo dinámicamente
+        nameCell.textContent = player.name;
+        nameCell.id = `name-${index}`;
         scoreRow.appendChild(nameCell);
 
         let scoreCell = document.createElement("td");
-        scoreCell.id = `score-${index}`; // Asignamos un ID al puntaje
-        scoreCell.textContent = "0"; // Iniciamos el puntaje en 0
+        scoreCell.id = `score-${index}`;
+        scoreCell.textContent = player.score;
         scoreRow.appendChild(scoreCell);
         scoreBody.appendChild(scoreRow);
 
@@ -107,14 +190,30 @@ function renderTables() {
         let shotRow = document.createElement("tr");
         let playerNameCell = document.createElement("td");
         playerNameCell.textContent = player.name;
-        playerNameCell.classList.add("Color-NombreJugador"); // Añadimos la clase para color blanco
+        playerNameCell.classList.add("Color-NombreJugador");
         playerNameCell.id = `shot-name-${index}`;
         shotRow.appendChild(playerNameCell);
 
         // Creamos las celdas para cada disparo del jugador
         for (let j = 0; j < TotalDisparos; j++) {
             let cell = document.createElement("td");
-            cell.id = `shot-${index}-${j}`; // ID para cada disparo
+            cell.id = `shot-${index}-${j}`;
+
+            // Buscar el estado guardado del disparo
+            const disparosGuardados = localStorage.getItem("estadoDisparos");
+            if (disparosGuardados) {
+                const disparosEstado = JSON.parse(disparosGuardados);
+                if (disparosEstado[index] && disparosEstado[index].disparos) {
+                    const disparo = disparosEstado[index].disparos[j];
+                    if (disparo) {
+                        cell.style.backgroundColor = disparo.color;
+                        if (disparo.resultado) {
+                            cell.dataset.result = disparo.resultado;
+                        }
+                    }
+                }
+            }
+
             shotRow.appendChild(cell);
         }
         shotsTable.appendChild(shotRow);
@@ -214,7 +313,6 @@ function updateScore() {
 function moveToNextShot() {
     let player = Jugadores[IndexJugadorActual];
 
-    // Si el jugador ya ha completado todos sus disparos, no hacer nada
     if (player.currentShot >= TotalDisparos) return;
 
     // Remover la clase active de la celda anterior
@@ -228,10 +326,11 @@ function moveToNextShot() {
     if (ConteoDisparosJugador == 4) {
         moveToNextPlayer();
     } else {
-        // Agregar la clase active a la nueva celda
         let newCell = document.getElementById(`shot-${IndexJugadorActual}-${player.currentShot}`);
         if (newCell) newCell.classList.add("active-shot");
     }
+
+    guardarEstadoJuego();
 }
 
 // Función para mover al siguiente jugador
@@ -287,40 +386,47 @@ function showRanking() {
 
 // Función para reiniciar el juego
 function resetGame() {
-    InicioElJuego = false
 
-    //aparece el boton iniciar
-    let BotonIniciar = document.getElementById("BotonIniciar")
-    BotonIniciar.style.display = ""
+    ReiniciarColor();
+    ReiniciarColor_VisorSup();
 
-    // Limpiamos los datos y reiniciamos las variables
-    document.getElementById("NumeroDeJugadores").value = "";
+    // Limpiar localStorage
+    localStorage.clear();
+
+    // Limpiar sessionStorage
+    sessionStorage.clear();
+
+    // Reiniciar variables
+    InicioElJuego = false;
+    document.getElementById("BotonIniciar").style.display = "";
     Jugadores = [];
     IndexJugadorActual = 0;
     DisparosEnRonda = 0;
     ConteoDisparosJugador = 0;
 
-    localStorage.setItem("Jugador_Activo", "Nombre");
-    localStorage.setItem("Puntos_Jugador_Activo", "00")
-
-    // Limpiar los inputs de nombres de jugadores
-    document.getElementById("playerNamesContainer").innerHTML = "";
-
-    // Limpiar la tabla de puntajes y disparos
+    // Limpiar tablas
     document.getElementById("scoreBody").innerHTML = "";
     document.getElementById("shotsTable").innerHTML = "";
-
-    // Limpiar la tabla de ranking
     document.getElementById("rankingBody").innerHTML = "";
 
-    // Eliminar los botones "Acertar" y "Errar"
-    let existingControls = document.getElementById("controlButtons");
+    // Limpiar controles
+    const existingControls = document.getElementById("controlButtons");
     if (existingControls) {
         existingControls.remove();
     }
 
-    ReiniciarColor();
-    ReiniciarColor_VisorSup();
+    // Limpiar inputs de jugadores
+    const playerNameContainer = document.getElementById("playerNamesContainer");
+    if (playerNameContainer) {
+        playerNameContainer.innerHTML = "";
+    }
+
+    // Limpiar input de número de jugadores
+    const numeroJugadoresInput = document.getElementById("NumeroDeJugadores");
+    if (numeroJugadoresInput) {
+        numeroJugadoresInput.value = "";
+    }
+
 }
 
 function resetShot() {
@@ -347,14 +453,18 @@ function resetShot() {
 document.addEventListener("keydown", function(event) {
     if (event.key === "+") {
         updateShot(true); // Acertar
+        guardarEstadoJuego();
     } else if (event.key === "Backspace") {
         updateShot(false); // Errar
+        guardarEstadoJuego();
     } else if (event.key === "Enter") {
         // Cuando se presiona "Enter", pasamos al siguiente disparo
         moveToNextShot();
+        guardarEstadoJuego();
     } else if (event.key === "-") {
         // Si se presiona Backspace, reiniciamos el disparo
         resetShot();
+        guardarEstadoJuego();
     }
 });
 
@@ -416,33 +526,42 @@ document.addEventListener("keydown", (event) => {
         if (event.key === "+") {
             CambiarColor(CirculoActivo, "verde");
             CambiarColor(CirculoActivo_VisorSup, "verde");
+            guardarEstadoJuego();
         } else if (event.key === "-") {
             CambiarColor(CirculoActivo, "rojo");
             CambiarColor(CirculoActivo_VisorSup, "rojo");
+            guardarEstadoJuego();
         } else if (event.key === "Backspace") {
             ReinicioIndividual(CirculoActivo);
             ReinicioIndividual(CirculoActivo_VisorSup);
+            guardarEstadoJuego();
         } else if (event.key === "0") {
             ReiniciarColor();
+            guardarEstadoJuego();
         } else if (CirculoActivo === "d4" && event.key === "Enter") {
             ReiniciarColor();
             ReiniciarColor_VisorSup();
+            guardarEstadoJuego();
         } else if (event.key === "Enter" && CirculoActivo === "d1") {
             CirculoActivo = "d2";
             CirculoActivo_VisorSup = "D2";
             localStorage.setItem("CirculoActivo", "d2");
             localStorage.setItem("CirculoActivo_VisorSup", "D2");
+            guardarEstadoJuego();
         } else if (CirculoActivo_VisorSup === "D2" && event.key === "Enter") {
             ReiniciarColor_VisorSup();
             CirculoActivo = "d3";
             localStorage.setItem("CirculoActivo", "d3");
+            guardarEstadoJuego();
         } else if (event.key === "Enter" && CirculoActivo === "d3") {
             CirculoActivo = "d4";
             CirculoActivo_VisorSup = "D2";
             localStorage.setItem("CirculoActivo", "d4");
+            guardarEstadoJuego();
         }
     }
 });
+
 // Botón de On/Off visor sup iq
 const toggleButton = document.getElementById("Boton_On/Off");
 toggleButton.addEventListener("click", Mostrar_Visor_sup);
@@ -450,3 +569,10 @@ toggleButton.addEventListener("click", Mostrar_Visor_sup);
 // Botón de On/Off visor flotante
 const ActivarBoton = document.getElementById("Boton_On/Off_flotante");
 ActivarBoton.addEventListener("click", Mostrar_Visor_flotante);
+
+// Cargar estado al iniciar la página
+window.onload = function() {
+    cargarEstadoGuardado();
+    renderTables();
+    updateScore();
+};
