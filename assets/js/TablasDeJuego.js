@@ -144,6 +144,13 @@ function IniciarJuego() {
 
     // Activamos las tablas de puntajes y disparos
     renderTables();
+
+    // Mostramos la tabla de disparos
+    const tablaDisparos = document.getElementById("shotsTable");
+    if (tablaDisparos) {
+        tablaDisparos.style.display = "table";
+    }
+
     createControlButtons();
 }
 
@@ -155,6 +162,13 @@ function renderTables() {
     // Limpiamos el contenido de las tablas
     scoreBody.innerHTML = "";
     shotsTable.innerHTML = "";
+
+    // Si el juego no ha iniciado, ocultamos la tabla de disparos
+    if (!InicioElJuego) {
+        if (shotsTable) {
+            shotsTable.style.display = "none";
+        }
+    }
 
     // Creamos la fila de encabezado para los disparos
     let headerRow = document.createElement("tr");
@@ -427,6 +441,9 @@ function resetGame() {
         numeroJugadoresInput.value = "";
     }
 
+    localStorage.setItem("Jugador_Activo", "Nombre")
+    localStorage.setItem("Puntos_Jugador_Activo", "00")
+
 }
 
 function resetShot() {
@@ -467,10 +484,6 @@ document.addEventListener("keydown", function(event) {
         guardarEstadoJuego();
     }
 });
-
-
-
-
 
 //Control-visores
 
@@ -575,4 +588,12 @@ window.onload = function() {
     cargarEstadoGuardado();
     renderTables();
     updateScore();
+
+    // Verificar si el juego ya está iniciado
+    if (localStorage.getItem("Jugador_Activo")) {
+        const botonIniciar = document.getElementById("BotonIniciar");
+        if (botonIniciar) {
+            botonIniciar.style.display = "none";
+        }
+    }
 };
