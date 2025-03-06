@@ -339,8 +339,6 @@ function updateScore() {
 function moveToNextShot() {
     let player = Jugadores[IndexJugadorActual];
 
-    if (player.currentShot >= TotalDisparos) return;
-
     // Remover la clase active de la celda anterior
     let prevCell = document.getElementById(`shot-${IndexJugadorActual}-${player.currentShot}`);
     if (prevCell) prevCell.classList.remove("active-shot");
@@ -349,7 +347,7 @@ function moveToNextShot() {
     player.currentShot++;
     ConteoDisparosJugador++;
 
-    if (ConteoDisparosJugador == 4) {
+    if (ConteoDisparosJugador == 4 || player.currentShot >= TotalDisparos) {
         moveToNextPlayer();
     } else {
         let newCell = document.getElementById(`shot-${IndexJugadorActual}-${player.currentShot}`);
