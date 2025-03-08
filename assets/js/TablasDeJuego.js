@@ -10,6 +10,8 @@ let InicioElJuego = false
 function guardarEstadoJuego() {
     // Guardar datos permanentes
     localStorage.setItem("jugadores", JSON.stringify(Jugadores));
+    window.dispatchEvent(new Event("storage"));
+
     localStorage.setItem("puntuaciones", JSON.stringify(
         Jugadores.map(jugador => ({ nombre: jugador.name, score: jugador.score }))
     ));
@@ -48,6 +50,12 @@ function cargarEstadoGuardado() {
     const jugadoresGuardados = localStorage.getItem("jugadores");
     if (jugadoresGuardados) {
         Jugadores = JSON.parse(jugadoresGuardados);
+    }
+
+    const totalDisparosGuardados = localStorage.getItem("TotalDisparos");
+    if (totalDisparosGuardados) {
+        TotalDisparos = parseInt(totalDisparosGuardados);
+        document.getElementById("NumeroDisparos").value = TotalDisparos;
     }
 
     // Cargar estado de disparos
@@ -102,6 +110,8 @@ function IniciarJuego() {
     }
 
     TotalDisparos = numeroDisparos;
+
+    localStorage.setItem("TotalDisparos", TotalDisparos);
 
     InicioElJuego = true
 
