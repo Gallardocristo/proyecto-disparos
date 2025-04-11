@@ -1,0 +1,64 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.Visor-Ranking {
+    display: flex;
+    align-items: center;
+    background: gray;
+    padding: 10px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.oculto {
+    opacity: 0;
+    transform: translateX(20px);
+    /* Se mueve hacia la derecha */
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.visible {
+    opacity: 1;
+    transform: translateX(0);
+    /* Vuelve a su posición original */
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.Visor-Ranking {
+    opacity: 1;
+    /* Inicialmente visible */
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    /* Agrega transición para opacidad y desplazamiento */
+}
+
+
+/* Cuando el visor-left está oculto */
+
+.Visor-Ranking.oculto {
+    opacity: 0;
+    /* Lo hace invisible */
+    transform: translateX(-100%);
+    /* Desplaza el visor hacia la izquierda fuera de la pantalla */
+}
+
+table {
+    width: 50%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th,
+td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+}

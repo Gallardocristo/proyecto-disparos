@@ -10,8 +10,6 @@ let InicioElJuego = false
 function guardarEstadoJuego() {
     // Guardar datos permanentes
     localStorage.setItem("jugadores", JSON.stringify(Jugadores));
-    window.dispatchEvent(new Event("storage"));
-
     localStorage.setItem("puntuaciones", JSON.stringify(
         Jugadores.map(jugador => ({ nombre: jugador.name, score: jugador.score }))
     ));
@@ -550,6 +548,11 @@ function Mostrar_Visor_flotante() {
     localStorage.setItem("Visibilidad_visor_flotante", EsVisible ? "oculto" : "visible");
 }
 
+function Mostrar_Visor_Ranking() {
+    const EsVisible = localStorage.getItem("Visibilidad_visor_Ranking") !== "oculto";
+    localStorage.setItem("Visibilidad_visor_Ranking", EsVisible ? "oculto" : "visible");
+}
+
 //Pasar al siguiente circulo
 
 
@@ -602,6 +605,10 @@ toggleButton.addEventListener("click", Mostrar_Visor_sup);
 // Botón de On/Off visor flotante
 const ActivarBoton = document.getElementById("Boton_On/Off_flotante");
 ActivarBoton.addEventListener("click", Mostrar_Visor_flotante);
+
+// Botón de On/Off visor Ranking
+const ActivarBoton2 = document.getElementById("Boton_On/Off_Ranking");
+ActivarBoton2.addEventListener("click", Mostrar_Visor_Ranking);
 
 // Cargar estado al iniciar la página
 window.onload = function() {
